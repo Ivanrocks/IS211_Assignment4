@@ -16,6 +16,7 @@ def get_me_random_list(n):
     
 
 def insertion_sort(a_list):
+    start_time = time.time()
     for index in range(1, len(a_list)):
         current_value = a_list[index]
         position = index
@@ -25,21 +26,24 @@ def insertion_sort(a_list):
             position = position - 1
 
         a_list[position] = current_value
-
+    end_time = time.time()
+    return end_time - start_time
 
 def shellSort(alist):
+    start_time = time.time()
     sublistcount = len(alist)//2
     while sublistcount > 0:
         for startposition in range(sublistcount):
             gapInsertionSort(alist,startposition,sublistcount)
 
-        print("After increments of size", sublistcount, "The list is",alist)
+        #print("After increments of size", sublistcount, "The list is",alist)
 
         sublistcount = sublistcount // 2
-
+    end_time = time.time()
+    return end_time - start_time
 
 def gapInsertionSort(alist, start, gap):
-
+    start_time = time.time()
     for i in range(start+gap, len(alist), gap):
         currentvalue = alist[i]
         position = i
@@ -49,7 +53,8 @@ def gapInsertionSort(alist, start, gap):
             position = position - gap
 
         alist[position] = currentvalue
-
+    end_time = time.time()
+    return end_time - start_time
 
 def python_sort(a_list):
     """
@@ -58,36 +63,49 @@ def python_sort(a_list):
     :param a_list:
     :return: the sorted list
     """
-    return sorted(a_list)
+    start_time = time.time()
+    mylist =  sorted(a_list)
+    end_time = time.time()
+    return end_time - start_time
+def main():
+    list_sizes = [500, 1000, 5000]
+
+    # the_size = list_sizes[0]
+    sort_dict = {
+        "InsertionSort": 0,
+        "ShellSort": 0,
+        "pythonSort": 0
+    }
+    for the_size in list_sizes:
+
+        print("#" * 50)
+        print("Size of list:", the_size, )
+
+        for i in range(100):
+            mylist500 = get_me_random_list(the_size)
+
+            time_spent = python_sort(mylist500)
+            sort_dict["pythonSort"] += time_spent
+
+            time_spent = shellSort(mylist500)
+            sort_dict["InsertionSort"] += time_spent
+
+            time_spent = shellSort(mylist500)
+            sort_dict["ShellSort"] += time_spent
+
+        avg_time = sort_dict["pythonSort"] / the_size
+        print(f"Python sort took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+
+        avg_time = sort_dict["InsertionSort"] / the_size
+        print(f"Insertion sort took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+
+        avg_time = sort_dict["ShellSort"] / the_size
+        print(f"Shell sort took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+
+        print("#" * 50)
+        print()
 
 
 if __name__ == "__main__":
     """Main entry point"""
-    list_sizes = [500, 1000, 5000]
-
-    # the_size = list_sizes[0]
-
-    for the_size in list_sizes:
-        total_time = 0
-        for i in range(100):
-            mylist500 = get_me_random_list(the_size)
-            start = time.time()
-            sorted_list = python_sort(mylist500)
-            time_spent = time.time() - start
-            total_time += time_spent
-
-        avg_time = total_time / 100
-        print(f"Python sort took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
-
-        total_time = 0
-        for i in range(100):
-            mylist500 = get_me_random_list(the_size)
-            start = time.time()
-            insertion_sort(mylist500)
-            time_spent = time.time() - start
-            total_time += time_spent
-
-        # Repeat the same loop and use shellSort(...)
-
-        avg_time = total_time / 100
-        print(f"Insertion sort took {avg_time:10.7f} seconds to run, on average for a list of {the_size} elements")
+    main()
